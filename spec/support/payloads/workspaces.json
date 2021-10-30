@@ -1,0 +1,28 @@
+{
+  "app_cards": [
+    {
+      "id": "22222222-3333-4444-5555-666666666666",
+      "identifier": "Test User",
+      "vendor": null,
+      "vendor_settings": {},
+      "webhook_url": null,
+      "documents_count": 10,
+      "templates_count": 1
+    },
+    {
+      "id": "33333333-4444-5555-6666-777777777777",
+      "identifier": "Other Workspace",
+      "vendor": null,
+      "vendor_settings": {},
+      "webhook_url": null,
+      "documents_count": 10,
+      "templates_count": 1
+    }
+  ],
+  "meta": {
+    "current_page": 1,
+    "next_page": null,
+    "prev_page": null,
+    "total_pages": 1
+  }
+}

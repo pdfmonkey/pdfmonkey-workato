@@ -1,0 +1,9 @@
+{
+  "errors": [
+    {
+      "status": "401",
+      "title": "Unauthorized",
+      "detail": "We were unable to authenticate you based on the provided API key. Please verify that you provided the intended key. We received a key statrting with xxx… If you think this is an error on our side feel free to contact us at support@pdfmonkey.io."
+    }
+  ]
+}

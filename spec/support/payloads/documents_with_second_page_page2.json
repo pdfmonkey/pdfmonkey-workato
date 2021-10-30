@@ -1,0 +1,27 @@
+{
+  "documents": [
+    {
+      "id": "bbbbbbbb-cccc-dddd-eeee-ffffffffffff",
+      "created_at": "2050-01-01T10:35:35.953+02:00",
+      "document_template_id": "44444444-5555-6666-7777-888888888888",
+      "meta": null,
+      "payload": null,
+      "status": "success",
+      "updated_at": "2050-01-01T10:35:36.195+02:00",
+      "app_id": "22222222-3333-4444-5555-666666666666",
+      "download_url": "https://pdfmonkey.s3.eu-west-1.amazonaws.com/test/backend/document/bbbbbbbb-cccc-dddd-eeee-ffffffffffff/test-file.pdf?response-content-disposition=attachment&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=XXX%2F20500101%2Feu-west-1%2Fs3%2Faws4_request&X-Amz-Date=20500101T103535Z&X-Amz-Expires=900&X-Amz-SignedHeaders=host&X-Amz-Signature=XXX",
+      "checksum": "9876543210fedcba9876543210fedcba",
+      "failure_cause": null,
+      "filename": "test-file.pdf",
+      "generation_logs": [],
+      "preview_url": "https://preview.pdfmonkey.io/pdf/web/viewer.html?file=https%3A%2F%2Fpreview.pdfmonkey.io%2Fdocument-render%2Fbbbbbbbb-cccc-dddd-eeee-ffffffffffff%2F9876543210fedcba9876543210fedcba",
+      "public_share_link": null
+    }
+  ],
+  "meta": {
+    "current_page": 2,
+    "next_page": null,
+    "prev_page": 1,
+    "total_pages": 2
+  }
+}

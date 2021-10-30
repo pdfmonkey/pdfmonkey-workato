@@ -1,0 +1,17 @@
+{
+  "current_user": {
+    "id": "11111111-2222-3333-4444-555555555555",
+    "auth_token": "XXX",
+    "available_documents": 300,
+    "created_at": "2000-01-02T03:04:05.123+01:00",
+    "current_plan": "free",
+    "current_plan_interval": "month",
+    "desired_name": "Test User",
+    "email": "test@example.com",
+    "lang": "en",
+    "paying_customer": false,
+    "trial_ends_on": null,
+    "updated_at": "2000-01-02T03:04:05.123+01:00",
+    "block_resources": true
+  }
+}

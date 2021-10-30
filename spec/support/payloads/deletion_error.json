@@ -1,0 +1,9 @@
+{
+  "errors": [
+    {
+      "status": "404",
+      "title": "Not Found",
+      "detail": "We couldn’t find any Document with ID \"aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee\". If you are its App’s owner please verify that you are sending the right API key in your request. If you think it’s an error on our part, feel free to contact us at support@pdfmonkey.io."
+    }
+  ]
+}
