@@ -292,6 +292,7 @@
           q: {
             app_id: input['workspace_id'],
             document_template_id: input['template_ids'],
+            status: 'success',
             updated_since: updated_since.to_i
           },
           sort: 'updated_at'

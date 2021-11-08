@@ -14,6 +14,7 @@ RSpec.describe 'triggers/document_generated', :freeze_time do
           q: {
             app_id: '22222222-3333-4444-5555-666666666666',
             document_template_id: '66666666-7777-8888-9999-000000000000',
+            status: 'success',
             updated_since: updated_since
           },
           sort: 'updated_at'
