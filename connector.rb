@@ -363,7 +363,9 @@
     end,
 
     make_hash: lambda do |json_string_or_array|
-      if json_string_or_array.is_a?(String)
+      if json_string_or_array.blank?
+        {}
+      elsif json_string_or_array.is_a?(String)
         parse_json(json_string_or_array)
       else
         Hash[json_string_or_array.pluck('key', 'value')]
