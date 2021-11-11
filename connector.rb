@@ -98,8 +98,8 @@
               { name: 'key' },
               { name: 'value' }
             ],
-            empty_list_title: 'Add variable',
-            empty_list_text: 'Add variables to make them available in your Template',
+            empty_list_title: 'Add data',
+            empty_list_text: 'Add data to make it available in your Template',
             toggle_hint: 'Using a simple key/value mapping',
             toggle_field: {
               name: 'payload',
