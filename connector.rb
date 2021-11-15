@@ -18,7 +18,11 @@
 
     authorization: {
       type: 'custom_auth',
-      apply: ->(connection) { headers('Authorization' => "Bearer #{connection['api_key']}") }
+      apply: lambda do |connection|
+        headers(
+          'Authorization' => "Bearer #{connection['api_key']}",
+          'User-Agent' => 'Workato')
+      end
     },
 
     base_uri: ->(_connection) { 'https://api.pdfmonkey.io/api/v1/' }

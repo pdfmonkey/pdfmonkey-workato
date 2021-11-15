@@ -6,7 +6,10 @@ RSpec.describe 'connector' do
 
   before do
     stub_request(:get, 'https://api.pdfmonkey.io/api/v1/current_user')
-      .with(headers: { Authorization: "Bearer #{settings[:api_key]}" })
+      .with(headers: {
+        'Authorization' => "Bearer #{settings[:api_key]}",
+        'User-Agent' => 'Workato'
+      })
       .to_return(
         status: 200,
         body: payload(:current_user),
