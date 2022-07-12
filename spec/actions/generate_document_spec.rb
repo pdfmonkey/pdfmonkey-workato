@@ -29,8 +29,8 @@ RSpec.describe 'actions/generate_document', :vcr do
             body: {
               document: {
                 document_template_id: '44444444-5555-6666-7777-888888888888',
-                meta: '{"key3":"value3","_filename":"test-doc.pdf"}',
-                payload: '{"key1":"value1","key2":"value2"}',
+                meta: { key3: 'value3', _filename: 'test-doc.pdf' },
+                payload: { key1: 'value1', key2: 'value2' },
                 status: 'pending'
               }
             },

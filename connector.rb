@@ -11,8 +11,11 @@
         label: 'Secret Key',
         control_type: 'password',
         optional: false,
-        hint: 'You can find this key in the PDFMonkey dashboard, ' \
-              'in the <a href="https://dashboard.pdfmonkey.io/account">My Account page</a>.'
+        hint: 'You can find this key in the PDFMonkey dashboard, in the ' \
+              '<a' \
+              '  href="https://dashboard.pdfmonkey.io/account"' \
+              '  target="_blank"' \
+              '>My Account page</a>.'
       }
     ],
 
@@ -72,7 +75,10 @@
           "in <span class='provider'>PDFMonkey</span>"
       end,
 
-      input_fields: lambda do |_object_definitions|
+      input_fields: lambda do |object_definitions, _connection|
+        json_fields = object_definitions['generate_document_input']
+        payload_json_field = json_fields.detect { |field| field[:name] == 'payload_as_json' }
+
         [
           {
             name: 'workspace_id',
@@ -91,6 +97,17 @@
             pick_list_params: { workspace_id: 'workspace_id' }
           },
           {
+            name: 'real_json',
+            label: 'Use a custom JSON structure',
+            hint: 'Select Yes if you prefer writing a complete JSON payload instead of a basic' \
+                  ' key/value mapping for the Document data.',
+            control_type: 'checkbox',
+            type: 'boolean',
+            default: false,
+            sticky: true
+          },
+          {
+            ngIf: 'input.real_json == "false"',
             name: 'payload',
             label: 'Payload',
             control_type: 'key_value',
@@ -103,17 +120,9 @@
               { name: 'value' }
             ],
             empty_list_title: 'Add data',
-            empty_list_text: 'Add data to make it available in your Template',
-            toggle_hint: 'Using a simple key/value mapping',
-            toggle_field: {
-              name: 'payload',
-              label: 'Payload',
-              control_type: 'text-area',
-              optional: true,
-              sticky: true,
-              toggle_hint: 'Write a custom JSON payload'
-            }
+            empty_list_text: 'Add data to make it available in your Template'
           },
+          payload_json_field,
           {
             name: 'filename',
             label: 'Filename',
@@ -134,16 +143,7 @@
               { name: 'value' }
             ],
             empty_list_title: 'Add meta-data',
-            empty_list_text: 'Add meta-data to your Document',
-            toggle_hint: 'Using a simple key/value mapping',
-            toggle_field: {
-              name: 'meta',
-              label: 'Meta Data',
-              control_type: 'text-area',
-              optional: true,
-              sticky: true,
-              toggle_hint: 'Write meta-data as custom JSON'
-            }
+            empty_list_text: 'Add meta-data to your Document'
           },
           {
             name: 'wait_for_query',
@@ -166,14 +166,21 @@
         step_time = current_step * 5
 
         if current_step == 1
-          meta = call(:make_hash, input['meta'].presence || [])
+          meta = call(:make_hash, input['meta'].presence)
           meta['_filename'] = meta['_filename'].presence || input['filename']
+
+          payload =
+            if input['real_json'] == 'true'
+              parse_json(input.dig('payload_as_json', 'data') || '{}')
+            else
+              call(:make_hash, input['payload'])
+            end
 
           params = {
             document: {
               document_template_id: input['template_id'],
-              payload: call(:make_hash, input['payload']).to_json,
-              meta: meta.to_json,
+              payload: payload,
+              meta: meta || {},
               status: 'pending'
             }
           }
@@ -366,18 +373,64 @@
       parsed_body
     end,
 
-    make_hash: lambda do |json_string_or_array|
-      if json_string_or_array.blank?
+    make_hash: lambda do |array_of_objects|
+      if array_of_objects.blank?
         {}
-      elsif json_string_or_array.is_a?(String)
-        parse_json(json_string_or_array)
       else
-        Hash[json_string_or_array.pluck('key', 'value')]
+        Hash[array_of_objects.pluck('key', 'value')]
+      end
+    end,
+
+    make_schema_builder_fields_sticky: lambda do |schema|
+      schema.map do |field|
+        if field['properties'].present?
+          field['properties'] = call('make_schema_builder_fields_sticky', field['properties'])
+        end
+
+        field['sticky'] = true
+
+        field
       end
     end
   },
 
   object_definitions: {
+    generate_document_input: {
+      fields: lambda do |_connection, input|
+        payload_schema = parse_json(input.dig('payload_as_json', 'shema') || '[]')
+        payload_data_props = call(:make_schema_builder_fields_sticky, payload_schema)
+
+        [
+          {
+            name: 'payload_as_json',
+            label: 'Payload',
+            ngIf: 'input.real_json == "true"',
+            optional: true,
+            sticky: true,
+            type: 'object',
+            properties: [
+              {
+                name: 'schema',
+                label: 'Schema',
+                sticky: true,
+                extends_schema: true,
+                schema_neutral: true,
+                control_type: 'schema-designer',
+                sample_data_type: 'json_input'
+              },
+              {
+                name: 'data',
+                label: 'Data',
+                sticky: true,
+                type: 'object',
+                properties: payload_data_props
+              }
+            ]
+          }
+        ]
+      end
+    },
+
     document: {
       fields: lambda do
         [

@@ -13,27 +13,20 @@ RSpec.describe 'methods/make_hash' do
     end
   end
 
+  context 'when the input is an empty array' do
+    let(:input) { [] }
+
+    it 'returns an empty Hash' do
+      expect(output).to eq({})
+    end
+  end
+
   context 'when the input is an array of objects' do
     let(:input) do
       [
         { 'key' => 'firstname', 'value' => 'Jane' },
         { 'key' => 'lastname', 'value' => 'Doe' }
       ]
-    end
-
-    it 'returns a proper Hash' do
-      expect(output).to eq({ 'firstname' => 'Jane', 'lastname' => 'Doe' })
-    end
-  end
-
-  context 'when the input is a JSON string' do
-    let(:input) do
-      <<~JSON
-        {
-          "firstname": "Jane",
-          "lastname": "Doe"
-        }
-      JSON
     end
 
     it 'returns a proper Hash' do
