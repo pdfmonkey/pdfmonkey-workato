@@ -222,6 +222,64 @@ RSpec.describe 'actions/generate_document', :vcr do
           'unexpected character (after document.document_template_id) at line 1, column 48')
       end
     end
+
+    context 'when the payload is provided as real JSON' do
+      let(:input) {{
+        workspace_id: '22222222-3333-4444-5555-666666666666',
+        template_id: '44444444-5555-6666-7777-888888888888',
+        real_json: 'true',
+        payload_as_json: <<~JSON,
+          {
+            "key1": "value1",
+            "key2": "value2"
+          }
+        JSON
+        filename: 'test-doc.pdf',
+        meta: [
+          { 'key' => 'key3', 'value' => 'value3' }
+        ]
+      }}
+
+      before do
+        stub_request(:post, endpoint('documents'))
+          .with(
+            body: {
+              document: {
+                document_template_id: '44444444-5555-6666-7777-888888888888',
+                meta: { key3: 'value3', _filename: 'test-doc.pdf' },
+                payload: { key1: 'value1', key2: 'value2' },
+                status: 'pending'
+              }
+            },
+            headers: {
+              'content-type': 'application/json'
+            })
+          .to_return(
+            status: 201,
+            body: payload(:document_success),
+            headers: { 'content-type': 'application/json' })
+      end
+
+      it 'expects the API to receive the proper payload' do
+        expect(output).to eq({
+          'id' => 'aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee',
+          'created_at' => '2050-01-01T10:34:35.953+02:00',
+          'document_template_id' => '44444444-5555-6666-7777-888888888888',
+          'meta' => nil,
+          'payload' => nil,
+          'status' => 'success',
+          'updated_at' => '2050-01-01T10:34:36.195+02:00',
+          'app_id' => '22222222-3333-4444-5555-666666666666',
+          'download_url' => 'https://pdfmonkey.s3.eu-west-1.amazonaws.com/test/backend/document/aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee/test-file.pdf?response-content-disposition=attachment&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=XXX%2F20500101%2Feu-west-1%2Fs3%2Faws4_request&X-Amz-Date=20500101T103435Z&X-Amz-Expires=900&X-Amz-SignedHeaders=host&X-Amz-Signature=XXX',
+          'checksum' => 'abcdef0123456789abcdef0123456789',
+          'failure_cause' => nil,
+          'filename' => 'test-file.pdf',
+          'generation_logs' => [],
+          'preview_url' => 'https://preview.pdfmonkey.io/pdf/web/viewer.html?file=https%3A%2F%2Fpreview.pdfmonkey.io%2Fdocument-render%2Faaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee%2Fabcdef01234567890abcdef012345678',
+          'public_share_link' => nil
+        })
+      end
+    end
   end
 
   describe 'output_fields' do

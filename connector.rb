@@ -75,10 +75,7 @@
           "in <span class='provider'>PDFMonkey</span>"
       end,
 
-      input_fields: lambda do |object_definitions, _connection|
-        json_fields = object_definitions['generate_document_input']
-        payload_json_field = json_fields.detect { |field| field[:name] == 'payload_as_json' }
-
+      input_fields: lambda do
         [
           {
             name: 'workspace_id',
@@ -122,7 +119,17 @@
             empty_list_title: 'Add data',
             empty_list_text: 'Add data to make it available in your Template'
           },
-          payload_json_field,
+          {
+            ngIf: 'input.real_json == "true"',
+            name: 'payload_as_json',
+            label: 'Payload',
+            control_type: 'text-area',
+            optional: true,
+            sticky: true,
+            type: 'string',
+            hint: 'Write a complete JSON payload instead of a basic key/value mapping for the' \
+                  ' Document data.'
+          },
           {
             name: 'filename',
             label: 'Filename',
@@ -171,7 +178,7 @@
 
           payload =
             if input['real_json'] == 'true'
-              parse_json(input.dig('payload_as_json', 'data') || '{}')
+              parse_json(input['payload_as_json'] || '{}')
             else
               call(:make_hash, input['payload'])
             end
@@ -395,42 +402,6 @@
   },
 
   object_definitions: {
-    generate_document_input: {
-      fields: lambda do |_connection, input|
-        payload_schema = parse_json(input.dig('payload_as_json', 'schema') || '[]')
-        payload_data_props = call(:make_schema_builder_fields_sticky, payload_schema)
-
-        [
-          {
-            name: 'payload_as_json',
-            label: 'Payload',
-            ngIf: 'input.real_json == "true"',
-            optional: true,
-            sticky: true,
-            type: 'object',
-            properties: [
-              {
-                name: 'schema',
-                label: 'Schema',
-                sticky: true,
-                extends_schema: true,
-                schema_neutral: true,
-                control_type: 'schema-designer',
-                sample_data_type: 'json_input'
-              },
-              {
-                name: 'data',
-                label: 'Data',
-                sticky: true,
-                type: 'object',
-                properties: payload_data_props
-              }
-            ]
-          }
-        ]
-      end
-    },
-
     document: {
       fields: lambda do
         [
