@@ -397,7 +397,7 @@
   object_definitions: {
     generate_document_input: {
       fields: lambda do |_connection, input|
-        payload_schema = parse_json(input.dig('payload_as_json', 'shema') || '[]')
+        payload_schema = parse_json(input.dig('payload_as_json', 'schema') || '[]')
         payload_data_props = call(:make_schema_builder_fields_sticky, payload_schema)
 
         [
