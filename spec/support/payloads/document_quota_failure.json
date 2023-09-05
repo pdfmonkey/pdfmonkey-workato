@@ -1,0 +1,7 @@
+{
+  "errors": {
+    "status": [
+      "You’ve reached your quota for this billing period. You can wait for the next period to generate this document or upgrade your account at https://dashboard.pdfmonkey.io/billing."
+    ]
+  }
+}

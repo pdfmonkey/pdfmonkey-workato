@@ -362,6 +362,8 @@
       errors =
         if payload['error']
           [payload['error']]
+        elsif payload['errors'].is_a?(Hash)
+          payload['errors'].map { |key, value| "#{key}: #{value.to_a.join(', ')}" }
         else
           payload['errors'].to_a.map { |error| error['detail'] }
         end

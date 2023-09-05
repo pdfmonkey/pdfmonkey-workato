@@ -135,6 +135,22 @@ RSpec.describe 'actions/generate_document', :vcr do
       end
     end
 
+    context 'when the generation is rejected due to quota' do
+      before do
+        stub_request(:post, endpoint('documents'))
+          .to_return(
+            status: 422,
+            body: payload(:document_quota_failure),
+            headers: { 'content-type': 'application/json' })
+      end
+
+      it 'raises an exception with the failure cause' do
+        expect { output }.to raise_exception(
+          'status: You’ve reached your quota for this billing period. You can wait for the next' \
+          ' period to generate this document or upgrade your account at https://dashboard.pdfmonkey.io/billing.')
+      end
+    end
+
     context 'when the generation fails with a failure cause' do
       before do
         stub_request(:post, endpoint('documents'))
